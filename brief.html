@@ -349,8 +349,13 @@
         /* SUCCESS */
 
         .success {
+            display: none;
             text-align: center;
             padding: 80px 30px;
+        }
+
+        .success.active {
+            display: block;
         }
 
         .success-circle {
@@ -1015,9 +1020,7 @@
 
 
 
-            <!-- SUCCESS STEP -->
-
-            <div class="step success" id="success">
+<div class="step success" id="success">
 
                 <div class="success-circle">
                     ✓
@@ -1043,8 +1046,7 @@
                     Вернуться на сайт →
                 </a>
 
-            </div>
-
+            </div>            </form>
         </section>
 
     </main>
@@ -1398,9 +1400,11 @@
                 body: JSON.stringify(payload)
             });
 
-            // Переходим на последний слайд «Заявка принята»
+            // Показываем финальный экран как следующий слайд внутри брифа
+            form.style.display = "none";
             currentStep = steps.length - 1;
             showStep(currentStep);
+            document.querySelector(".progress").style.display = "none";
 
             window.scrollTo({
                 top: 0,
