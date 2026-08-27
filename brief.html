@@ -1330,17 +1330,6 @@
         });
     }
 
-    function showSuccessScreen() {
-        form.style.display = "none";
-        document.querySelector(".progress").style.display = "none";
-        success.classList.add("active");
-
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
-    }
-
     form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
@@ -1393,12 +1382,7 @@
                 });
             }
 
-            /*
-             * Google Apps Script отвечает через cross-origin redirect.
-             * В режиме no-cors браузер иногда долго ждёт fetch,
-             * хотя заявка уже доставлена. Поэтому ждём максимум 15 секунд.
-             */
-            const request = fetch(WEB_APP_URL, {
+            await fetch(WEB_APP_URL, {
                 method: "POST",
                 mode: "no-cors",
                 headers: {
@@ -1407,13 +1391,15 @@
                 body: JSON.stringify(payload)
             });
 
-            const timeout = new Promise(resolve => {
-                setTimeout(resolve, 15000);
+            // Меняем последний слайд формы на экран успешной отправки
+            form.innerHTML = success.innerHTML;
+            form.classList.add("success", "active");
+            document.querySelector(".progress").style.display = "none";
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
             });
-
-            await Promise.race([request, timeout]);
-
-            showSuccessScreen();
 
         } catch (error) {
             console.error("Ошибка отправки брифа:", error);
