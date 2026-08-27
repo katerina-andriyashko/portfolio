@@ -621,11 +621,12 @@
                         </div>
 
                         <div class="field">
-                            <label for="phone">Телефон</label>
+                            <label for="phone">Телефон *</label>
                             <input
                                 type="tel"
                                 id="phone"
                                 name="phone"
+                                required
                                 placeholder="+49 ..."
                             >
                         </div>
@@ -1142,6 +1143,18 @@
 
         percentText.textContent =
             `${Math.round(progress)}%`;
+
+        // На первом экране оставляем обложку.
+        // После перехода к вопросам убираем её, чтобы поля были сразу видны.
+        const intro = document.querySelector(".intro");
+        const progress = document.querySelector(".progress");
+
+        if (step > 0) {
+            intro.style.display = "none";
+            progress.style.marginTop = "40px";
+        } else {
+            intro.style.display = "block";
+        }
 
         window.scrollTo({
             top: 0,
