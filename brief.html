@@ -1391,9 +1391,9 @@
                 body: JSON.stringify(payload)
             });
 
-            // Меняем последний слайд формы на экран успешной отправки
-            form.innerHTML = success.innerHTML;
-            form.classList.add("success", "active");
+            // Показываем финальный экран как следующий слайд внутри брифа
+            form.style.display = "none";
+            success.classList.add("active");
             document.querySelector(".progress").style.display = "none";
 
             window.scrollTo({
