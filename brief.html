@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Бриф — Екатерина Андрияшко</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600&family=Manrope:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            --cream: #f7f3ee;
+            --white: #fffdf9;
+            --beige: #e4d6c8;
+            --brown: #6b5548;
+            --dark: #24201d;
+            --rose: #b47c68;
+            --line: rgba(64, 51, 44, .18);
+
+            --serif: "Cormorant Garamond", Georgia, serif;
+            --sans: "Manrope", Arial, sans-serif;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background: var(--cream);
+            color: var(--dark);
+            font-family: var(--sans);
+        }
+
+        a {
+            color: inherit;
+            text-decoration: none;
+        }
+
+        .page {
+            min-height: 100vh;
+        }
+
+        .container {
+            width: min(900px, calc(100% - 40px));
+            margin: 0 auto;
+        }
+
+        /* HEADER */
+
+        .brief-header {
+            padding: 35px 0;
+            border-bottom: 1px solid var(--line);
+        }
+
+        .brief-header-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            font-family: var(--serif);
+            font-size: 25px;
+            line-height: .8;
+        }
+
+        .logo span {
+            font-size: 19px;
+        }
+
+        .back-link {
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            color: var(--brown);
+        }
+
+        /* INTRO */
+
+        .intro {
+            padding: 90px 0 60px;
+        }
+
+        .label {
+            color: var(--rose);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .16em;
+            font-weight: 600;
+        }
+
+        .intro h1 {
+            margin-top: 25px;
+            font-family: var(--serif);
+            font-size: clamp(60px, 9vw, 95px);
+            font-weight: 500;
+            line-height: .82;
+            letter-spacing: -.04em;
+        }
+
+        .intro h1 span {
+            color: var(--brown);
+        }
+
+        .intro p {
+            max-width: 560px;
+            margin-top: 30px;
+            color: #756960;
+            font-size: 14px;
+            line-height: 1.9;
+        }
+
+        /* PROGRESS */
+
+        .progress {
+            margin-bottom: 55px;
+        }
+
+        .progress-top {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 12px;
+            color: var(--brown);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 2px;
+            background: var(--beige);
+        }
+
+        .progress-fill {
+            width: 20%;
+            height: 100%;
+            background: var(--rose);
+            transition: .4s;
+        }
+
+        /* FORM */
+
+        .brief-form {
+            background: var(--white);
+            padding: 50px;
+            margin-bottom: 100px;
+        }
+
+        .step {
+            display: none;
+        }
+
+        .step.active {
+            display: block;
+            animation: fadeIn .4s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .step-title {
+            font-family: var(--serif);
+            font-size: 46px;
+            font-weight: 500;
+            line-height: .9;
+        }
+
+        .step-description {
+            margin-top: 15px;
+            color: #786e67;
+            font-size: 13px;
+            line-height: 1.7;
+        }
+
+        .fields {
+            margin-top: 40px;
+        }
+
+        .field {
+            margin-bottom: 28px;
+        }
+
+        .field label {
+            display: block;
+            margin-bottom: 9px;
+            color: var(--brown);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            font-weight: 600;
+        }
+
+        .field input,
+        .field textarea,
+        .field select {
+            width: 100%;
+            padding: 15px 0;
+            border: none;
+            border-bottom: 1px solid var(--line);
+            background: transparent;
+            color: var(--dark);
+            font-family: var(--sans);
+            font-size: 14px;
+            outline: none;
+        }
+
+        .field textarea {
+            min-height: 110px;
+            resize: vertical;
+        }
+
+        .field input:focus,
+        .field textarea:focus,
+        .field select:focus {
+            border-color: var(--rose);
+        }
+
+        /* CHOICES */
+
+        .choices {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            margin-top: 30px;
+        }
+
+        .choice input {
+            display: none;
+        }
+
+        .choice label {
+            display: block;
+            padding: 20px;
+            border: 1px solid var(--line);
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .choice label:hover {
+            border-color: var(--rose);
+        }
+
+        .choice input:checked + label {
+            background: var(--brown);
+            color: var(--white);
+            border-color: var(--brown);
+        }
+
+        .choice-title {
+            display: block;
+            font-family: var(--serif);
+            font-size: 24px;
+        }
+
+        .choice-description {
+            display: block;
+            margin-top: 5px;
+            font-size: 10px;
+            opacity: .7;
+        }
+
+        /* BUTTONS */
+
+        .form-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin-top: 50px;
+        }
+
+        .form-button {
+            min-height: 50px;
+            padding: 0 25px;
+            border: 1px solid var(--dark);
+            background: transparent;
+            font-family: var(--sans);
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: .1em;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .form-button:hover {
+            background: var(--dark);
+            color: var(--white);
+        }
+
+        .next-button {
+            margin-left: auto;
+            background: var(--dark);
+            color: var(--white);
+        }
+
+        .next-button:hover {
+            background: var(--rose);
+            border-color: var(--rose);
+        }
+
+        /* FILE */
+
+        .file-upload {
+            margin-top: 30px;
+            padding: 35px;
+            border: 1px dashed var(--brown);
+            text-align: center;
+            cursor: pointer;
+            transition: .3s;
+        }
+
+        .file-upload:hover {
+            background: var(--cream);
+        }
+
+        .file-upload input {
+            display: none;
+        }
+
+        .file-upload strong {
+            display: block;
+            font-family: var(--serif);
+            font-size: 25px;
+            font-weight: 500;
+        }
+
+        .file-upload span {
+            display: block;
+            margin-top: 7px;
+            color: #81756d;
+            font-size: 11px;
+        }
+
+        /* SUCCESS */
+
+        .success {
+            display: none;
+            text-align: center;
+            padding: 80px 30px;
+        }
+
+        .success.active {
+            display: block;
+        }
+
+        .success-circle {
+            width: 75px;
+            height: 75px;
+            margin: 0 auto 30px;
+            border-radius: 50%;
+            background: var(--rose);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: var(--serif);
+            font-size: 30px;
+        }
+
+        .success h2 {
+            font-family: var(--serif);
+            font-size: 55px;
+            font-weight: 500;
+        }
+
+        .success p {
+            max-width: 450px;
+            margin: 20px auto 0;
+            color: #756960;
+            font-size: 13px;
+            line-height: 1.8;
+        }
+
+        /* MOBILE */
+
+        @media (max-width: 600px) {
+
+            .container {
+                width: min(100% - 28px, 900px);
+            }
+
+            .brief-header {
+                padding: 25px 0;
+            }
+
+            .intro {
+                padding: 65px 0 40px;
+            }
+
+            .brief-form {
+                padding: 30px 22px;
+            }
+
+            .step-title {
+                font-size: 40px;
+            }
+
+            .choices {
+                grid-template-columns: 1fr;
+            }
+
+            .form-buttons {
+                flex-direction: column-reverse;
+            }
+
+            .form-button {
+                width: 100%;
+            }
+
+            .next-button {
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+
+
+<body>
+
+<div class="page">
+
+    <header class="brief-header">
+
+        <div class="container brief-header-inner">
+
+            <a href="index.html" class="logo">
+                Екатерина<br>
+                <span>Андрияшко</span>
+            </a>
+
+            <a href="index.html" class="back-link">
+                ← Вернуться на сайт
+            </a>
+
+        </div>
+
+    </header>
+
+
+    <main>
+
+        <section class="intro">
+
+            <div class="container">
+
+                <div class="label">
+                    Бриф на дизайн
+                </div>
+
+                <h1>
+                    Бриф на<br>
+                    <span id="serviceTitle">ваш проект</span>
+                </h1>
+
+                <p id="serviceDescription">
+                    Заполните небольшую анкету — это поможет мне
+                    лучше понять вашу задачу, стиль и пожелания.
+                    Заполнение займёт около 5 минут.
+                </p>
+
+            </div>
+
+        </section>
+
+
+        <section class="container">
+
+            <div class="progress">
+
+                <div class="progress-top">
+                    <span id="stepText">Шаг 1 из 5</span>
+                    <span id="percentText">20%</span>
+                </div>
+
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+
+            </div>
+
+
+            <form class="brief-form" id="briefForm">
+
+                <!-- STEP 1 -->
+
+                <div class="step active">
+
+                    <h2 class="step-title">
+                        Немного<br>
+                        о вас
+                    </h2>
+
+                    <p class="step-description">
+                        Начнём с контактных данных, чтобы я могла
+                        связаться с вами после получения заявки.
+                    </p>
+
+                    <div class="fields">
+
+                        <div class="field">
+                            <label for="name">Ваше имя *</label>
+                            <input
+                                type="text"
+                                id="name"
+                                name="name"
+                                required
+                                placeholder="Например, Анна"
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label for="email">Email *</label>
+                            <input
+                                type="email"
+                                id="email"
+                                name="email"
+                                required
+                                placeholder="example@mail.com"
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label for="telegram">Telegram</label>
+                            <input
+                                type="text"
+                                id="telegram"
+                                name="telegram"
+                                placeholder="@username"
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label for="phone">Телефон</label>
+                            <input
+                                type="tel"
+                                id="phone"
+                                name="phone"
+                                placeholder="+49 ..."
+                            >
+                        </div>
+
+                    </div>
+
+                    <div class="form-buttons">
+                        <button type="button" class="form-button next-button">
+                            Далее →
+                        </button>
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 2 -->
+
+                <div class="step">
+
+                    <h2 class="step-title">
+                        О вашем<br>
+                        бизнесе
+                    </h2>
+
+                    <p class="step-description">
+                        Расскажите немного о бренде, для которого
+                        создаётся дизайн.
+                    </p>
+
+                    <div class="fields">
+
+                        <div class="field">
+                            <label for="company">Название компании / бренда</label>
+                            <input
+                                type="text"
+                                id="company"
+                                name="company"
+                                placeholder="Название"
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label for="sphere">Чем вы занимаетесь?</label>
+                            <input
+                                type="text"
+                                id="sphere"
+                                name="sphere"
+                                placeholder="Например, студия маникюра"
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label for="description">
+                                Расскажите о проекте
+                            </label>
+
+                            <textarea
+                                id="description"
+                                name="description"
+                                placeholder="Что вы хотите создать и для чего это будет использоваться?"
+                            ></textarea>
+                        </div>
+
+                    </div>
+
+                    <div class="form-buttons">
+
+                        <button type="button" class="form-button prev-button">
+                            ← Назад
+                        </button>
+
+                        <button type="button" class="form-button next-button">
+                            Далее →
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 3 -->
+
+                <div class="step">
+
+                    <h2 class="step-title">
+                        Какой стиль<br>
+                        вам близок?
+                    </h2>
+
+                    <p class="step-description">
+                        Можно выбрать один или несколько вариантов.
+                        Если сложно определиться — ничего страшного,
+                        обсудим это вместе.
+                    </p>
+
+                    <div class="choices">
+
+                        <div class="choice">
+                            <input
+                                type="checkbox"
+                                id="style1"
+                                name="style"
+                                value="Минимализм"
+                            >
+                            <label for="style1">
+                                <span class="choice-title">Минимализм</span>
+                                <span class="choice-description">
+                                    Чисто и лаконично
+                                </span>
+                            </label>
+                        </div>
+
+                        <div class="choice">
+                            <input
+                                type="checkbox"
+                                id="style2"
+                                name="style"
+                                value="Элегантный"
+                            >
+                            <label for="style2">
+                                <span class="choice-title">Элегантный</span>
+                                <span class="choice-description">
+                                    Сдержанно и премиально
+                                </span>
+                            </label>
+                        </div>
+
+                        <div class="choice">
+                            <input
+                                type="checkbox"
+                                id="style3"
+                                name="style"
+                                value="Современный"
+                            >
+                            <label for="style3">
+                                <span class="choice-title">Современный</span>
+                                <span class="choice-description">
+                                    Смело и необычно
+                                </span>
+                            </label>
+                        </div>
+
+                        <div class="choice">
+                            <input
+                                type="checkbox"
+                                id="style4"
+                                name="style"
+                                value="Нежный"
+                            >
+                            <label for="style4">
+                                <span class="choice-title">Нежный</span>
+                                <span class="choice-description">
+                                    Легко и мягко
+                                </span>
+                            </label>
+                        </div>
+
+                    </div>
+
+                    <div class="fields">
+
+                        <div class="field">
+                            <label for="colors">
+                                Какие цвета вам нравятся?
+                            </label>
+
+                            <input
+                                type="text"
+                                id="colors"
+                                name="colors"
+                                placeholder="Например, бежевый, коричневый, молочный"
+                            >
+                        </div>
+
+                        <div class="field">
+                            <label for="examples">
+                                Есть примеры дизайна, которые вам нравятся?
+                            </label>
+
+                            <textarea
+                                id="examples"
+                                name="examples"
+                                placeholder="Вставьте ссылки на Pinterest, Instagram или другие примеры"
+                            ></textarea>
+                        </div>
+
+                    </div>
+
+                    <div class="form-buttons">
+
+                        <button type="button" class="form-button prev-button">
+                            ← Назад
+                        </button>
+
+                        <button type="button" class="form-button next-button">
+                            Далее →
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 4 -->
+
+                <div class="step">
+
+                    <h2 class="step-title">
+                        Материалы<br>
+                        для работы
+                    </h2>
+
+                    <p class="step-description">
+                        Если у вас уже есть логотип, фотографии,
+                        фирменный стиль или другие материалы —
+                        их можно прикрепить.
+                    </p>
+
+                    <div class="file-upload">
+
+                        <label for="files">
+
+                            <strong>
+                                + Добавить файлы
+                            </strong>
+
+                            <span>
+                                Логотип, фотографии, примеры и другие материалы
+                            </span>
+
+                        </label>
+
+                        <input
+                            type="file"
+                            id="files"
+                            name="files"
+                            multiple
+                        >
+
+                    </div>
+
+                    <div class="fields">
+
+                        <div class="field">
+
+                            <label for="materials">
+                                Ссылка на дополнительные материалы
+                            </label>
+
+                            <input
+                                type="url"
+                                id="materials"
+                                name="materials"
+                                placeholder="Google Drive / Dropbox / Яндекс Диск"
+                            >
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-buttons">
+
+                        <button type="button" class="form-button prev-button">
+                            ← Назад
+                        </button>
+
+                        <button type="button" class="form-button next-button">
+                            Далее →
+                        </button>
+
+                    </div>
+
+                </div>
+
+
+                <!-- STEP 5 -->
+
+                <div class="step">
+
+                    <h2 class="step-title">
+                        Последние<br>
+                        детали
+                    </h2>
+
+                    <p class="step-description">
+                        Осталось совсем немного.
+                    </p>
+
+                    <div class="fields">
+
+                        <div class="field">
+
+                            <label for="deadline">
+                                Когда нужен готовый дизайн?
+                            </label>
+
+                            <select id="deadline" name="deadline">
+
+                                <option value="">
+                                    Выберите вариант
+                                </option>
+
+                                <option value="Срочно">
+                                    Срочно
+                                </option>
+
+                                <option value="В течение недели">
+                                    В течение недели
+                                </option>
+
+                                <option value="1–2 недели">
+                                    В течение 1–2 недель
+                                </option>
+
+                                <option value="Не срочно">
+                                    Срок не принципиален
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="budget">
+                                Предполагаемый бюджет
+                            </label>
+
+                            <select id="budget" name="budget">
+
+                                <option value="">
+                                    Выберите вариант
+                                </option>
+
+                                <option value="До 30€">
+                                    До 30€
+                                </option>
+
+                                <option value="30–60€">
+                                    30–60€
+                                </option>
+
+                                <option value="60–100€">
+                                    60–100€
+                                </option>
+
+                                <option value="Более 100€">
+                                    Более 100€
+                                </option>
+
+                                <option value="Не определился(ась)">
+                                    Пока не определился(ась)
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <div class="field">
+
+                            <label for="comment">
+                                Дополнительные пожелания
+                            </label>
+
+                            <textarea
+                                id="comment"
+                                name="comment"
+                                placeholder="Напишите всё, что считаете важным..."
+                            ></textarea>
+
+                        </div>
+
+                    </div>
+
+                    <div class="form-buttons">
+
+                        <button type="button" class="form-button prev-button">
+                            ← Назад
+                        </button>
+
+                        <button type="submit" class="form-button next-button">
+                            Отправить заявку →
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </form>
+
+
+            <!-- SUCCESS -->
+
+            <div class="brief-form success" id="success">
+
+                <div class="success-circle">
+                    ✓
+                </div>
+
+                <h2>
+                    Спасибо!
+                </h2>
+
+                <p>
+                    Ваша заявка отправлена.
+                    Я изучу информацию и свяжусь с вами
+                    в ближайшее время.
+                </p>
+
+            </div>
+
+        </section>
+
+    </main>
+
+</div>
+
+
+<script>
+        // Определяем выбранную услугу
+
+    const params = new URLSearchParams(window.location.search);
+
+    const service = params.get("service");
+
+    const serviceTitle = document.getElementById("serviceTitle");
+    const serviceDescription = document.getElementById("serviceDescription");
+
+
+    const services = {
+
+        vizitka: {
+            title: "визитку",
+            description:
+                "Расскажите о вашей компании и пожеланиях к визитке. Это поможет мне создать дизайн, который будет соответствовать вашему бренду."
+        },
+
+        price: {
+            title: "прайс-лист",
+            description:
+                "Расскажите, какие услуги и цены нужно разместить. Я помогу сделать информацию понятной, красивой и удобной для ваших клиентов."
+        },
+
+        loyalty: {
+            title: "карту лояльности",
+            description:
+                "Расскажите о вашей программе лояльности, формате карты и пожеланиях к дизайну."
+        },
+
+        certificate: {
+            title: "сертификат об обучении",
+            description:
+                "Расскажите о вашем обучении или курсе и о том, какую информацию необходимо разместить на сертификате."
+        },
+
+        gift: {
+            title: "подарочный сертификат",
+            description:
+                "Расскажите о вашем сертификате, номинале, сроке действия и других важных деталях."
+        }
+
+    };
+
+
+    if (services[service]) {
+
+        serviceTitle.textContent = services[service].title;
+
+        serviceDescription.textContent =
+            services[service].description;
+
+    }
+    
+    const form = document.getElementById("briefForm");
+    const steps = document.querySelectorAll(".step");
+
+    const progressFill = document.getElementById("progressFill");
+    const stepText = document.getElementById("stepText");
+    const percentText = document.getElementById("percentText");
+
+    const nextButtons = document.querySelectorAll(".next-button");
+    const prevButtons = document.querySelectorAll(".prev-button");
+
+    const success = document.getElementById("success");
+
+    let currentStep = 0;
+
+
+    function showStep(step) {
+
+        steps.forEach((item, index) => {
+            item.classList.toggle("active", index === step);
+        });
+
+        const progress = ((step + 1) / steps.length) * 100;
+
+        progressFill.style.width = progress + "%";
+
+        stepText.textContent =
+            `Шаг ${step + 1} из ${steps.length}`;
+
+        percentText.textContent =
+            `${Math.round(progress)}%`;
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+    }
+
+
+    nextButtons.forEach((button) => {
+
+        button.addEventListener("click", () => {
+
+            const currentFields =
+                steps[currentStep].querySelectorAll(
+                    "input[required], textarea[required], select[required]"
+                );
+
+            let valid = true;
+
+            currentFields.forEach((field) => {
+
+                if (!field.checkValidity()) {
+
+                    field.reportValidity();
+                    valid = false;
+
+                }
+
+            });
+
+            if (!valid) return;
+
+            if (currentStep < steps.length - 1) {
+
+                currentStep++;
+
+                showStep(currentStep);
+
+            }
+
+        });
+
+    });
+
+
+    prevButtons.forEach((button) => {
+
+        button.addEventListener("click", () => {
+
+            if (currentStep > 0) {
+
+                currentStep--;
+
+                showStep(currentStep);
+
+            }
+
+        });
+
+    });
+
+
+    form.addEventListener("submit", (event) => {
+
+        event.preventDefault();
+
+        form.style.display = "none";
+
+        document.querySelector(".progress").style.display = "none";
+
+        success.classList.add("active");
+
+        window.scrollTo({
+            top: 0,
+            behavior: "smooth"
+        });
+
+    });
+
+
+    showStep(currentStep);
+
+</script>
+
+</body>
+</html>
