@@ -353,10 +353,6 @@
             padding: 80px 30px;
         }
 
-        .success.active {
-            display: block;
-        }
-
         .success-circle {
             width: 75px;
             height: 75px;
@@ -1017,10 +1013,9 @@
 
                 </div>
 
-            </form>
 
 
-            <!-- SUCCESS -->
+            <!-- SUCCESS STEP -->
 
             <div class="step success" id="success">
 
@@ -1403,11 +1398,9 @@
                 body: JSON.stringify(payload)
             });
 
-            // Показываем финальный экран как отдельный слайд внутри брифа
+            // Переходим на последний слайд «Заявка принята»
             currentStep = steps.length - 1;
             showStep(currentStep);
-            document.querySelector(".progress").style.display = "none";
-            success.classList.add("active");
 
             window.scrollTo({
                 top: 0,
