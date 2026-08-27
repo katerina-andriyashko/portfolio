@@ -1115,20 +1115,61 @@
     });
 
 
-    form.addEventListener("submit", (event) => {
+    const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzY3yWPH1pYKx-xyWFxr2D1IiDqig70XXSZX_omekDHv4DOw_EtEshaTfMn8ScDczndLw/exec";
+
+    form.addEventListener("submit", async (event) => {
 
         event.preventDefault();
 
-        form.style.display = "none";
+        const submitButton = form.querySelector('button[type="submit"]');
+        const originalButtonText = submitButton.textContent;
 
-        document.querySelector(".progress").style.display = "none";
+        submitButton.disabled = true;
+        submitButton.textContent = "Отправляем...";
 
-        success.classList.add("active");
+        try {
 
-        window.scrollTo({
-            top: 0,
-            behavior: "smooth"
-        });
+            const formData = new FormData(form);
+
+            // Файлы пока не отправляем: подключим загрузку вложений отдельным этапом.
+            formData.delete("files");
+
+            // Передаём услугу, выбранную в URL страницы.
+            formData.append("service", service || "Не указана");
+
+            const body = new URLSearchParams();
+
+            for (const [key, value] of formData.entries()) {
+                body.append(key, value);
+            }
+
+            // no-cors нужен, потому что сайт работает на GitHub Pages,
+            // а Apps Script находится на другом домене.
+            await fetch(WEB_APP_URL, {
+                method: "POST",
+                mode: "no-cors",
+                body: body
+            });
+
+            form.style.display = "none";
+            document.querySelector(".progress").style.display = "none";
+            success.classList.add("active");
+
+            window.scrollTo({
+                top: 0,
+                behavior: "smooth"
+            });
+
+        } catch (error) {
+
+            console.error("Ошибка отправки брифа:", error);
+
+            submitButton.disabled = false;
+            submitButton.textContent = originalButtonText;
+
+            alert("Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз.");
+
+        }
 
     });
 
