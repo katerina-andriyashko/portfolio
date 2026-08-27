@@ -426,7 +426,57 @@
                 margin-left: 0;
             }
         }
-    </style>
+    
+
+        .file-list {
+            margin-top: 14px;
+            display: grid;
+            gap: 8px;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 10px 12px;
+            border: 1px solid rgba(0,0,0,.10);
+            border-radius: 10px;
+            font-size: 14px;
+        }
+
+        .file-item-info {
+            min-width: 0;
+            overflow: hidden;
+        }
+
+        .file-item-name {
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        .file-item-size {
+            opacity: .6;
+            font-size: 12px;
+            margin-top: 2px;
+        }
+
+        .file-remove {
+            flex: 0 0 auto;
+            border: 0;
+            background: transparent;
+            cursor: pointer;
+            font-size: 18px;
+            line-height: 1;
+            padding: 4px 6px;
+        }
+
+        .upload-error {
+            margin-top: 10px;
+            font-size: 13px;
+        }
+</style>
 </head>
 
 
@@ -787,7 +837,10 @@
                             id="files"
                             name="files"
                             multiple
+                            accept="image/*,.pdf,.doc,.docx,.xls,.xlsx,.ppt,.pptx,.zip"
                         >
+
+                        <div id="fileList" class="file-list" aria-live="polite"></div>
 
                     </div>
 
@@ -1117,8 +1170,131 @@
 
     const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbzY3yWPH1pYKx-xyWFxr2D1IiDqig70XXSZX_omekDHv4DOw_EtEshaTfMn8ScDczndLw/exec";
 
-    form.addEventListener("submit", async (event) => {
+    const fileInput = document.getElementById("files");
+    const fileList = document.getElementById("fileList");
 
+    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 МБ
+    const MAX_FILES = 5;
+    const MAX_TOTAL_SIZE = 20 * 1024 * 1024; // 20 МБ на всю заявку
+
+    let selectedFiles = [];
+
+    function formatFileSize(bytes) {
+        if (bytes < 1024) return bytes + " Б";
+        if (bytes < 1024 * 1024) return (bytes / 1024).toFixed(1) + " КБ";
+        return (bytes / 1024 / 1024).toFixed(1) + " МБ";
+    }
+
+    function renderFileList() {
+        fileList.innerHTML = "";
+
+        selectedFiles.forEach((file, index) => {
+            const item = document.createElement("div");
+            item.className = "file-item";
+
+            const info = document.createElement("div");
+            info.className = "file-item-info";
+
+            const name = document.createElement("div");
+            name.className = "file-item-name";
+            name.textContent = file.name;
+
+            const size = document.createElement("div");
+            size.className = "file-item-size";
+            size.textContent = formatFileSize(file.size);
+
+            info.appendChild(name);
+            info.appendChild(size);
+
+            const remove = document.createElement("button");
+            remove.type = "button";
+            remove.className = "file-remove";
+            remove.textContent = "×";
+            remove.setAttribute("aria-label", "Удалить " + file.name);
+
+            remove.addEventListener("click", () => {
+                selectedFiles.splice(index, 1);
+                renderFileList();
+                syncFileInput();
+            });
+
+            item.appendChild(info);
+            item.appendChild(remove);
+            fileList.appendChild(item);
+        });
+    }
+
+    function syncFileInput() {
+        try {
+            const dt = new DataTransfer();
+            selectedFiles.forEach(file => dt.items.add(file));
+            fileInput.files = dt.files;
+        } catch (error) {
+            // В старых браузерах список input может не поддерживать запись.
+        }
+    }
+
+    fileInput.addEventListener("change", () => {
+        const incoming = Array.from(fileInput.files || []);
+
+        for (const file of incoming) {
+            if (selectedFiles.some(existing =>
+                existing.name === file.name &&
+                existing.size === file.size &&
+                existing.lastModified === file.lastModified
+            )) {
+                continue;
+            }
+
+            if (selectedFiles.length >= MAX_FILES) {
+                alert("Можно прикрепить не более 5 файлов.");
+                break;
+            }
+
+            if (file.size > MAX_FILE_SIZE) {
+                alert(`Файл "${file.name}" слишком большой. Максимальный размер — 10 МБ.`);
+                continue;
+            }
+
+            const currentTotal = selectedFiles.reduce((sum, item) => sum + item.size, 0);
+
+            if (currentTotal + file.size > MAX_TOTAL_SIZE) {
+                alert("Общий размер файлов не должен превышать 20 МБ.");
+                break;
+            }
+
+            selectedFiles.push(file);
+        }
+
+        renderFileList();
+        syncFileInput();
+    });
+
+    async function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+            const reader = new FileReader();
+
+            reader.onload = () => {
+                const result = String(reader.result || "");
+                const comma = result.indexOf(",");
+
+                if (comma === -1) {
+                    reject(new Error(`Не удалось прочитать файл "${file.name}".`));
+                    return;
+                }
+
+                resolve(result.slice(comma + 1));
+            };
+
+            reader.onerror = () => {
+                reject(new Error(`Не удалось прочитать файл "${file.name}".`));
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
+
+    form.addEventListener("submit", async (event) => {
         event.preventDefault();
 
         const submitButton = form.querySelector('button[type="submit"]');
@@ -1128,7 +1304,6 @@
         submitButton.textContent = "Отправляем...";
 
         try {
-
             const formData = new FormData(form);
             const payload = {};
 
@@ -1144,60 +1319,33 @@
 
             payload.service = service || "Не указана";
 
-            // Читаем выбранные файлы и кодируем их в base64.
-            const fileInput = document.getElementById("files");
-            const files = Array.from(fileInput.files || []);
+            const totalSize = selectedFiles.reduce((sum, file) => sum + file.size, 0);
 
-            const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 МБ на файл
-            const MAX_FILES = 5;
-
-            if (files.length > MAX_FILES) {
+            if (selectedFiles.length > MAX_FILES) {
                 throw new Error("Можно прикрепить не более 5 файлов.");
             }
 
-            const filePayload = [];
+            if (totalSize > MAX_TOTAL_SIZE) {
+                throw new Error("Общий размер файлов не должен превышать 20 МБ.");
+            }
 
-            for (const file of files) {
+            payload.files = [];
+
+            for (const file of selectedFiles) {
                 if (file.size > MAX_FILE_SIZE) {
                     throw new Error(
                         `Файл "${file.name}" слишком большой. Максимальный размер — 10 МБ.`
                     );
                 }
 
-                const base64 = await new Promise((resolve, reject) => {
-                    const reader = new FileReader();
-
-                    reader.onload = () => {
-                        const result = String(reader.result || "");
-                        const comma = result.indexOf(",");
-
-                        if (comma === -1) {
-                            reject(new Error(`Не удалось прочитать файл "${file.name}".`));
-                            return;
-                        }
-
-                        resolve(result.slice(comma + 1));
-                    };
-
-                    reader.onerror = () => {
-                        reject(new Error(`Не удалось прочитать файл "${file.name}".`));
-                    };
-
-                    reader.readAsDataURL(file);
-                });
-
-                filePayload.push({
+                payload.files.push({
                     name: file.name,
                     type: file.type || "application/octet-stream",
                     size: file.size,
-                    data: base64
+                    data: await fileToBase64(file)
                 });
             }
 
-            payload.files = filePayload;
-
-            // text/plain позволяет отправить запрос с GitHub Pages
-            // без CORS preflight.
             await fetch(WEB_APP_URL, {
                 method: "POST",
                 mode: "no-cors",
@@ -1217,18 +1365,17 @@
             });
 
         } catch (error) {
-
             console.error("Ошибка отправки брифа:", error);
 
             submitButton.disabled = false;
             submitButton.textContent = originalButtonText;
 
-            alert("Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз.");
-
+            alert(
+                error.message ||
+                "Не удалось отправить заявку. Пожалуйста, попробуйте ещё раз."
+            );
         }
-
     });
-
 
     showStep(currentStep);
 
