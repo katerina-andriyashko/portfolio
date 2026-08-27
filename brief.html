@@ -378,12 +378,38 @@
             font-weight: 500;
         }
 
+        .success .success-label {
+            margin-bottom: 18px;
+            color: #81756d;
+            font-size: 10px;
+            letter-spacing: 0.16em;
+            text-transform: uppercase;
+        }
+
         .success p {
             max-width: 450px;
             margin: 20px auto 0;
             color: #756960;
             font-size: 13px;
             line-height: 1.8;
+        }
+
+        .success-home {
+            display: inline-block;
+            margin-top: 34px;
+            padding: 15px 24px;
+            border: 1px solid #2a2623;
+            color: #2a2623;
+            text-decoration: none;
+            font-size: 11px;
+            letter-spacing: 0.08em;
+            text-transform: uppercase;
+            transition: background 0.2s ease, color 0.2s ease;
+        }
+
+        .success-home:hover {
+            background: #2a2623;
+            color: #fff;
         }
 
         /* MOBILE */
@@ -1002,15 +1028,25 @@
                     ✓
                 </div>
 
+                <div class="success-label">
+                    Заявка успешно отправлена
+                </div>
+
                 <h2>
-                    Спасибо!
+                    Заявка принята.
                 </h2>
 
                 <p>
-                    Ваша заявка отправлена.
-                    Я изучу информацию и свяжусь с вами
-                    в ближайшее время.
+                    Спасибо! Я получила вашу заявку и уже могу
+                    перейти к её изучению.
+                    <br>
+                    Я свяжусь с вами в ближайшее время,
+                    чтобы обсудить детали проекта.
                 </p>
+
+                <a class="success-home" href="index.html">
+                    Вернуться на сайт →
+                </a>
 
             </div>
 
