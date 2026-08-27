@@ -1134,15 +1134,15 @@
             item.classList.toggle("active", index === step);
         });
 
-        const progress = ((step + 1) / steps.length) * 100;
+        const progressValue = ((step + 1) / steps.length) * 100;
 
-        progressFill.style.width = progress + "%";
+        progressFill.style.width = progressValue + "%";
 
         stepText.textContent =
             `Шаг ${step + 1} из ${steps.length}`;
 
         percentText.textContent =
-            `${Math.round(progress)}%`;
+            `${Math.round(progressValue)}%`;
 
         // На первом экране оставляем обложку.
         // После перехода к вопросам убираем её, чтобы поля были сразу видны.
