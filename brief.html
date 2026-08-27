@@ -1130,25 +1130,81 @@
         try {
 
             const formData = new FormData(form);
-
-            // Файлы пока не отправляем: подключим загрузку вложений отдельным этапом.
-            formData.delete("files");
-
-            // Передаём услугу, выбранную в URL страницы.
-            formData.append("service", service || "Не указана");
-
-            const body = new URLSearchParams();
+            const payload = {};
 
             for (const [key, value] of formData.entries()) {
-                body.append(key, value);
+                if (key === "files") continue;
+
+                if (payload[key]) {
+                    payload[key] = payload[key] + ", " + value;
+                } else {
+                    payload[key] = value;
+                }
             }
 
-            // no-cors нужен, потому что сайт работает на GitHub Pages,
-            // а Apps Script находится на другом домене.
+            payload.service = service || "Не указана";
+
+            // Читаем выбранные файлы и кодируем их в base64.
+            const fileInput = document.getElementById("files");
+            const files = Array.from(fileInput.files || []);
+
+            const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10 МБ на файл
+            const MAX_FILES = 5;
+
+            if (files.length > MAX_FILES) {
+                throw new Error("Можно прикрепить не более 5 файлов.");
+            }
+
+            const filePayload = [];
+
+            for (const file of files) {
+                if (file.size > MAX_FILE_SIZE) {
+                    throw new Error(
+                        `Файл "${file.name}" слишком большой. Максимальный размер — 10 МБ.`
+                    );
+                }
+
+                const base64 = await new Promise((resolve, reject) => {
+                    const reader = new FileReader();
+
+                    reader.onload = () => {
+                        const result = String(reader.result || "");
+                        const comma = result.indexOf(",");
+
+                        if (comma === -1) {
+                            reject(new Error(`Не удалось прочитать файл "${file.name}".`));
+                            return;
+                        }
+
+                        resolve(result.slice(comma + 1));
+                    };
+
+                    reader.onerror = () => {
+                        reject(new Error(`Не удалось прочитать файл "${file.name}".`));
+                    };
+
+                    reader.readAsDataURL(file);
+                });
+
+                filePayload.push({
+                    name: file.name,
+                    type: file.type || "application/octet-stream",
+                    size: file.size,
+                    data: base64
+                });
+            }
+
+            payload.files = filePayload;
+
+            // text/plain позволяет отправить запрос с GitHub Pages
+            // без CORS preflight.
             await fetch(WEB_APP_URL, {
                 method: "POST",
                 mode: "no-cors",
-                body: body
+                headers: {
+                    "Content-Type": "text/plain;charset=utf-8"
+                },
+                body: JSON.stringify(payload)
             });
 
             form.style.display = "none";
