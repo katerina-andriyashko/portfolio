@@ -349,7 +349,6 @@
         /* SUCCESS */
 
         .success {
-            display: none;
             text-align: center;
             padding: 80px 30px;
         }
@@ -1023,7 +1022,7 @@
 
             <!-- SUCCESS -->
 
-            <div class="brief-form success" id="success">
+            <div class="step success" id="success">
 
                 <div class="success-circle">
                     ✓
@@ -1404,10 +1403,11 @@
                 body: JSON.stringify(payload)
             });
 
-            // Показываем финальный экран как следующий слайд внутри брифа
-            form.style.display = "none";
-            success.classList.add("active");
+            // Показываем финальный экран как отдельный слайд внутри брифа
+            currentStep = steps.length - 1;
+            showStep(currentStep);
             document.querySelector(".progress").style.display = "none";
+            success.classList.add("active");
 
             window.scrollTo({
                 top: 0,
